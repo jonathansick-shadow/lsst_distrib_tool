@@ -78,7 +78,7 @@ detectOS()
 checkPrereq()
 {
 	OS="$1"
-	
+
 	case $OS in
 	rhel_compatible-6-*)
 		for rpm in rsync gcc-c++ gcc-gfortran flex bison \
@@ -89,7 +89,8 @@ checkPrereq()
 		done
 		if [[ ! -z $MISSING_RPMS ]]; then
 			echo "Missing prerequisites: $MISSING_RPMS"
-			echo "As root, run: 'yum install $MISSING_RPMS'"
+			echo "As root, run:"
+			echo "    yum install $MISSING_RPMS"
 			exit -1
 		fi
 		;;
@@ -110,9 +111,7 @@ checkPrereq()
 }
 
 OS=$(detectOS)
-NAME="dmstack-$OS"
-URLBASE="rsync://moya.dev.lsstcorp.org/dmstack"
-URL="$URLBASE/$NAME/"
+URL="rsync://moya.dev.lsstcorp.org/dmstack/dmstack-$OS/"
 
 echo "Detected $OS. Hit CTRL-C if I'm wrong."
 checkPrereq "$OS"
@@ -127,11 +126,12 @@ done < <(rsync --out-format='%n %b/%l' -az "$URL" "$ROOT")
 [[ $n -ge 1000 ]] && echo ""
 echo "$n files updated."
 
-BUILDROOT=$(sed -n 's/export LSST_HOME=\(.*\)/\1/p' xxx/loadLSST.sh)
+BUILDROOT=$(sed -n 's/export LSST_HOME=\(.*\)/\1/p' "$ROOT/loadLSST.sh")
 if [[ $ROOT != "$BUILDROOT" ]]; then
-	echo "=== Binary distribution was built in $BUILDROOT. Fixing up EUPS paths."
-	echo "=== NOTE: THIS FEATURE IS EXPERIMENTAL. FOR MAXIMUM COMPATIBILITY,"
-	echo "          INSTALL IN '$BUILDROOT'."
+	echo "=== Binary distribution was built in $BUILDROOT."
+	echo "=== You've installed it in $ROOT."
+	echo "=== THIS FEATURE IS EXPERIMENTAL. FOR MAXIMUM COMPATIBILITY,"
+	echo "=== INSTALL IN '$BUILDROOT'."
 	( cd "$ROOT" && grep -Rl --exclude '*.pyc' --exclude '*~' "$BUILDROOT" eups loadLSST.* | xargs sed -i\~ "s|$BUILDROOT|$ROOT|" )
 fi
 
@@ -151,6 +151,12 @@ cat <<-EOF;
 	    source $ROOT/loadLSST.csh"   
 
 	to load version management with EUPS and begin using it.
+
+	To update the stack in the future, run:
+	
+	   setup lsst_distrib
+	   lsst-distrib update
+	   
 EOF
 fi
 

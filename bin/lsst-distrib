@@ -154,7 +154,7 @@ cat <<-EOF;
 
 	To update the stack in the future, run:
 	
-	   setup lsst_distrib
+	   setup lsst_distrib_tool
 	   lsst-distrib update
 	   
 EOF

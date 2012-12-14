@@ -5,6 +5,7 @@
 
 set -e
 DEFROOT=/opt/lsst
+URLBASE="rsync://moya.dev.lsstcorp.org/dmstack"
 
 usage()
 {
@@ -111,7 +112,7 @@ checkPrereq()
 }
 
 OS=$(detectOS)
-URL="rsync://moya.dev.lsstcorp.org/dmstack/dmstack-$OS/"
+URL="$URLBASE/$OS/"
 
 echo "Detected $OS. Hit CTRL-C if I'm wrong."
 checkPrereq "$OS"

@@ -140,15 +140,15 @@ cat <<-EOF;
 
 	Done. The LSST Data Management stack has been installed in:
 	
-	    '$ROOT'
+	    $ROOT
 
 	. If using bash, type:
 
-	    source $ROOT/loadLSST.sh"
+	    source $ROOT/loadLSST.sh
 
 	or, if using csh:
 
-	    source $ROOT/loadLSST.csh"   
+	    source $ROOT/loadLSST.csh
 
 	to load version management with EUPS and begin using it.
 

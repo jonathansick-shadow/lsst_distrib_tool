@@ -33,15 +33,16 @@ EOF
 
 [[ $1 == "--help" || $1 == "-h" ]] && usage
 
-MODE="$1"
-case "$MODE" in
+case "$1" in
 install|"")
+	MODE=install
 	ROOT=${2-$DEFROOT}
 	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Have you forgotten to run this script as root?"; exit -1; }
 	[[ -w "$ROOT" ]] || { echo "$ROOT is not writable. Have you forgotten to run this script as root?"; exit -1; }
 	[[ -e $ROOT && ! -z $(ls -A "$ROOT") ]] && { echo "$ROOT already has some content; did you mean to run '$0 update'?."; exit -1; }
 	;;
 update)
+	MODE=update
 	ROOT=${2-$DEFROOT}
 	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Have you forgotten to run this script as root?"; exit -1; }
 	[[ -w "$ROOT" ]] || { echo "$ROOT is not writable. Have you forgotten to run this script as root?"; exit -1; }

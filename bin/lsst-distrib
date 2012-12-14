@@ -126,9 +126,12 @@ done < <(rsync --out-format='%n %b/%l' -az "$URL" "$ROOT")
 [[ $n -ge 1000 ]] && echo ""
 echo "$n files updated."
 
-if [[ $ROOT != "$DEFROOT" ]]; then
-	echo "Fixing up EUPS paths."
-	( cd "$ROOT" && grep -Rl --exclude '*.pyc' --exclude '*~' "$DEFROOT" eups loadLSST.* | xargs sed -i \~ "s|$DEFROOT|$ROOT|" )
+BUILDROOT=$(sed -n 's/export LSST_HOME=\(.*\)/\1/p' xxx/loadLSST.sh)
+if [[ $ROOT != "$BUILDROOT" ]]; then
+	echo "=== Binary distribution was built in $BUILDROOT. Fixing up EUPS paths."
+	echo "=== NOTE: THIS FEATURE IS EXPERIMENTAL. FOR MAXIMUM COMPATIBILITY,"
+	echo "          INSTALL IN '$BUILDROOT'."
+	( cd "$ROOT" && grep -Rl --exclude '*.pyc' --exclude '*~' "$BUILDROOT" eups loadLSST.* | xargs sed -i\~ "s|$BUILDROOT|$ROOT|" )
 fi
 
 if [[ $MODE == "install" ]]; then
@@ -149,3 +152,5 @@ cat <<-EOF;
 	to load version management with EUPS and begin using it.
 EOF
 fi
+
+echo "Done."

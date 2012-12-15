@@ -4,7 +4,7 @@
 #
 
 set -e
-DEFROOT=/opt/lsst
+DEFROOT=${LSST_HOME-/opt/lsst}
 URLBASE="rsync://moya.dev.lsstcorp.org/dmstack"
 
 CMD=$(basename "$0")

@@ -117,13 +117,25 @@ checkPrereq()
 	esac
 }
 
+# Detect OS, ask user for confirmation if it's different from what's stored in
+# $ROOT/.os
 OS=$(detectOS)
-URL="$URLBASE/$OS/"
+test -f "$ROOT/.os" && OS_STORED=$(head -n 1 "$ROOT/.os")
+if [[ $OS != $OS_STORED ]]; then
+	while true; do
+		read -p "Detected $OS. Is this correct (y/n)? " yn
+		case $yn in
+			[Yy]* ) break;;
+			[Nn]* ) exit -1;;
+			* ) echo "Please answer yes or no.";;
+		esac
+	done
+fi
 
-echo "Detected $OS. Hit CTRL-C if I'm wrong."
 checkPrereq "$OS"
 
-echo "Downloading to $ROOT"
+URL="$URLBASE/$OS/"
+echo "Installing to $ROOT"
 echo "Downloading using rsync from $URL"
 n=0
 while read line; do

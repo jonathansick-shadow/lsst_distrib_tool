@@ -7,6 +7,8 @@ set -e
 DEFROOT=/opt/lsst
 URLBASE="rsync://moya.dev.lsstcorp.org/dmstack"
 
+CMD=$(basename "$0")
+
 usage()
 {
 	cat <<-EOF;
@@ -15,10 +17,10 @@ usage()
 	
 		Usage:
 		
-		        $0 [-h|--help] [update|install] [dest_dir]
+		        $CMD [-h|--help] [update|install] [dest_dir]
 
 		Running with no command line arguments is equivalent to running
-		'$0 install'.
+		'$CMD install'.
 
 		Arguments:
 		install		Install the binary distribution of DM stack
@@ -40,7 +42,7 @@ install|"")
 	ROOT=${2-$DEFROOT}
 	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Have you forgotten to run this script as root?"; exit -1; }
 	[[ -w "$ROOT" ]] || { echo "$ROOT is not writable. Have you forgotten to run this script as root?"; exit -1; }
-	[[ -e $ROOT && ! -z $(ls -A "$ROOT") ]] && { echo "$ROOT already has some content; did you mean to run '$0 update'?."; exit -1; }
+	[[ -e $ROOT && ! -z $(ls -A "$ROOT") ]] && { echo "$ROOT already has some content; did you mean to run '$CMD update'?."; exit -1; }
 	;;
 update)
 	MODE=update

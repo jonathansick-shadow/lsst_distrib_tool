@@ -18,11 +18,15 @@ usage()
 		Usage:
 		
 		        $CMD [-h|--help] [update|install] [dest_dir]
-
-		Running with no command line arguments is equivalent to running
-		'$CMD install'.
+		        
+		Examples:
+		
+		        $CMD install
+		        $CMD update
+		        $CMD install mystack
 
 		Arguments:
+
 		install		Install the binary distribution of DM stack
 		update		Update an existing binary distribution install
 
@@ -37,7 +41,7 @@ EOF
 [[ $1 == "--help" || $1 == "-h" ]] && usage
 
 case "$1" in
-install|"")
+install)
 	MODE=install
 	ROOT=${2-$DEFROOT}
 	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Have you forgotten to run this script as root?"; exit -1; }

@@ -44,15 +44,15 @@ case "$1" in
 install)
 	MODE=install
 	ROOT=${2-$DEFROOT}
-	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Have you forgotten to run this script as root?"; exit -1; }
-	[[ -w "$ROOT" ]] || { echo "$ROOT is not writable. Have you forgotten to run this script as root?"; exit -1; }
+	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Do you have the necessary permissions?"; exit -1; }
+	[[ -w "$ROOT" ]] || { echo "$ROOT is not writable. Do you have permissions to write there?"; exit -1; }
 	[[ -e $ROOT && ! -z $(ls -A "$ROOT") ]] && { echo "$ROOT already has some content; did you mean to run '$CMD update'?."; exit -1; }
 	;;
 update)
 	MODE=update
 	ROOT=${2-$DEFROOT}
-	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Have you forgotten to run this script as root?"; exit -1; }
-	[[ -w "$ROOT" ]] || { echo "$ROOT is not writable. Have you forgotten to run this script as root?"; exit -1; }
+	mkdir -p "$ROOT" || { echo "Failed to create $ROOT. Do you have the necessary permissions??"; exit -1; }
+	[[ -w "$ROOT" ]] || { echo "$ROOT is not writable. Do you have permissions to write there?"; exit -1; }
 	;;
 *)
 	usage

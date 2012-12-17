@@ -34,6 +34,11 @@ usage()
 		                than the directory it was originally built in. This
 		                is an experimental feature and may cause some
 		                misbehavior.
+
+		Environment variables:
+		
+		CHECK_PREREQ	If set to 0, won't check for prerequisites.
+
 EOF
 	exit -2;
 }
@@ -87,6 +92,8 @@ checkPrereq()
 {
 	OS="$1"
 
+	[[ $CHECK_PREREQ == 0 ]] && return 0
+
 	case $OS in
 	rhel_compatible-6-*)
 		for rpm in rsync gcc-c++ gcc-gfortran flex bison tk-devel \
@@ -111,7 +118,8 @@ checkPrereq()
 		done
 		if [[ ! -z $MISSING_RPMS ]]; then
 			echo "Missing prerequisites: $MISSING_RPMS"
-			echo "As root, run: 'yum install $MISSING_RPMS'"
+			echo "As root, run:"
+			echo "    yum install $MISSING_RPMS"
 			exit -1
 		fi
 		;;
@@ -121,6 +129,7 @@ checkPrereq()
 getAvailableStacks()
 {
 	echo $(rsync $1 -n  | grep "^d" | grep -v ".* \.$" | awk '{print $5}')
+	##echo "osx-10.7-x86_64 osx-10.8-x86_64 rhel_compatible-6-x86_64"
 }
 
 containsElement()
@@ -133,31 +142,32 @@ containsElement()
 # Detect OS, ask user for confirmation if it's different from what's stored in
 # $ROOT/.os
 OS=$(detectOS)
+STACKS=( $(getAvailableStacks "$URLBASE") )
+containsElement "$OS" "${STACKS[@]}" && SUPP="supported" || SUPP="UNSUPPORTED"
 test -f "$ROOT/.os" && OS_STORED=$(head -n 1 "$ROOT/.os")
 if [[ $OS != $OS_STORED ]]; then
 	while true; do
-		read -p "Detected $OS. Is this correct (y/n)? " yn
-		case $yn in
-			[Yy]* ) break;;
-			[Nn]* ) exit -1;;
-			* ) echo "Please answer yes or no.";;
-		esac
+		echo    "Install version for which platform?"
+		echo    "   Available platforms: ${STACKS[@]}"
+		echo    "   Detected platform:   $OS ($SUPP)"
+		read -p "Enter platform, press ENTER to use '$OS', or CTRL-C to quit: " os
+
+		[[ -z "$os" ]] && os="$OS"
+
+		if ! containsElement "$os" "${STACKS[@]}"; then
+			echo
+			echo "No binary distribution is available for platform '$os'."
+			echo
+		else
+			break
+		fi
 	done
+	OS="$os"
 fi
 
 checkPrereq "$OS"
 
 URL="$URLBASE/$OS/"
-
-echo "Verifying availability."
-STACKS=( $(getAvailableStacks "$URLBASE") )
-if ! containsElement "$OS" "${STACKS[@]}"; then
-	echo "No binary version of the stack is available for your platform, $OS"
-	echo "Available platforms: ${STACKS[@]}"
-	echo "As an alternative, consider installing from source."
-	exit -1
-fi
-
 echo "Installing to $ROOT"
 echo "Downloading using rsync from $URL"
 n=0

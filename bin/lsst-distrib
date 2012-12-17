@@ -4,7 +4,7 @@
 #
 
 set -e
-URLBASE="rsync://moya.dev.lsstcorp.org/dmstack"
+URLBASE=${DISTRIB_URL-"rsync://moya.dev.lsstcorp.org/dmstack"}
 
 usage()
 {
@@ -35,6 +35,8 @@ usage()
 		Environment variables:
 		
 		CHECK_PREREQ	If set to 0, won't check for prerequisites.
+		DISTRIB_URL	If set, override the default remote location from
+		                which the binaries will be downloaded
 
 EOF
 	exit -2;

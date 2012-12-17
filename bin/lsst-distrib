@@ -118,6 +118,18 @@ checkPrereq()
 	esac
 }
 
+getAvailableStacks()
+{
+	echo $(rsync $1 -n  | grep "^d" | grep -v ".* \.$" | awk '{print $5}')
+}
+
+containsElement()
+{
+	local e
+	for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+	return 1
+}
+
 # Detect OS, ask user for confirmation if it's different from what's stored in
 # $ROOT/.os
 OS=$(detectOS)
@@ -136,6 +148,16 @@ fi
 checkPrereq "$OS"
 
 URL="$URLBASE/$OS/"
+
+echo "Verifying availability."
+STACKS=( $(getAvailableStacks "$URLBASE") )
+if ! containsElement "$OS" "${STACKS[@]}"; then
+	echo "No binary version of the stack is available for your platform, $OS"
+	echo "Available platforms: ${STACKS[@]}"
+	echo "As an alternative, consider installing from source."
+	exit -1
+fi
+
 echo "Installing to $ROOT"
 echo "Downloading using rsync from $URL"
 n=0

@@ -217,7 +217,14 @@ if [[ $ROOT != "$BUILDROOT" ]]; then
 	echo "=== You've installed it in $ROOT."
 	echo "=== THIS FEATURE IS EXPERIMENTAL. FOR MAXIMUM COMPATIBILITY,"
 	echo "=== INSTALL IN '$BUILDROOT'."
-	( cd "$ROOT" && grep -Rl --exclude '*.pyc' --exclude '*~' "$BUILDROOT" eups loadLSST.* | xargs sed -i\~ "s|$BUILDROOT|$ROOT|" )
+	(
+		# The two-step process is to avoid making a replacement in the same file twice
+		# (e.g., if the file is accessible through a symlink, and the replacement still
+		# matches the pattern). One could do the same by sorting on inode
+		cd "$ROOT"
+		grep -Rl --exclude '*.pyc' --exclude '*~' "$BUILDROOT" eups loadLSST.* | xargs sed -i\~ "s|$BUILDROOT|__DUMMYPATTERN__|"
+		grep -Rl --exclude '*.pyc' --exclude '*~' "__DUMMYPATTERN__" eups loadLSST.* | xargs sed -i\~\~ "s|__DUMMYPATTERN__|$ROOT|"
+	)
 fi
 
 if [[ $MODE == "install" ]]; then

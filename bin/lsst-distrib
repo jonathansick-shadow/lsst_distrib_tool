@@ -123,17 +123,17 @@ containsElement()
 ###########
 
 CMD=$(basename "$0")
-OS=$(detectOS)
-
 [[ $1 == "--help" || $1 == "-h" ]] && usage
 containsElement "$1" install update || usage
 
 [[ -z "$LSST_HOME" ]] && unset LSST_HOME
+OS=$(detectOS)
 ROOT=${LSST_HOME-/opt/lsst/$OS}
 
-# Detect OS, ask for confirmation if it's different from what's stored in $ROOT/.os
-test -f "$ROOT/.os" && OS_STORED=$(head -n 1 "$ROOT/.os")
-if [[ $OS != $OS_STORED ]]; then
+if [[ -f "$ROOT/.os" ]]; then
+	OS=$(head -n 1 "$ROOT/.os")
+else
+	# Allow the user to change the auto-detected OS
 	STACKS=( $(getAvailableStacks "$URLBASE") )
 	containsElement "$OS" "${STACKS[@]}" && SUPP="supported" || SUPP="UNSUPPORTED"
 	while true; do

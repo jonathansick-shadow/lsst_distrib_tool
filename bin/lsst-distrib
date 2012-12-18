@@ -14,29 +14,27 @@ usage()
 	
 		Usage:
 		
-		        $CMD [-h|--help] [update|install] [dest_dir]
+		        $CMD [-h|--help] [update|install]
 		        
 		Examples:
 		
 		        $CMD install
 		        $CMD update
-		        $CMD install mystack
 
 		Arguments:
 
 		install		Install the binary distribution of DM stack
 		update		Update an existing binary distribution install
 
-		dest_dir	EXPERIMENTAL: Install the stack to <destdir>, rather
-		                than the directory it was originally built in. This
-		                is an experimental feature and may cause some
-		                misbehavior.
-
 		Environment variables:
 		
 		CHECK_PREREQ	If set to 0, won't check for prerequisites.
 		DISTRIB_URL	If set, override the default remote location from
 		                which the binaries will be downloaded
+		LSST_HOME	EXPERIMENTAL: Install the stack to $LSST_HOME, rather
+		                than the directory it was originally built in. This
+		                is an experimental feature and may cause some
+		                application to misbehave.
 
 EOF
 	exit -2;
@@ -131,8 +129,7 @@ OS=$(detectOS)
 containsElement "$1" install update || usage
 
 [[ -z "$LSST_HOME" ]] && unset LSST_HOME
-DEFROOT=${LSST_HOME-/opt/lsst/$OS}
-ROOT=${2-$DEFROOT}
+ROOT=${LSST_HOME-/opt/lsst/$OS}
 
 # Detect OS, ask for confirmation if it's different from what's stored in $ROOT/.os
 test -f "$ROOT/.os" && OS_STORED=$(head -n 1 "$ROOT/.os")
@@ -158,8 +155,7 @@ if [[ $OS != $OS_STORED ]]; then
 	echo
 
 	OS="$os"
-	DEFROOT=${LSST_HOME-/opt/lsst/$OS}
-	ROOT=${2-$DEFROOT}
+	ROOT=${LSST_HOME-/opt/lsst/$OS}
 
 	# If there's a mismatch with what's in $ROOT/.os, ask for confirmation
 	if [[ -f "$ROOT/.os" ]]; then

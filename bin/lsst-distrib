@@ -60,6 +60,11 @@ detectOS()
 			echo "Unknown Linux flavor; please install from source."
 			exit -1
 		fi
+		;;
+	*)
+		echo "Unsupported operating system. Try installing from source"
+		exit -1
+		;;
 	esac
 	
 	echo $OS-$VER-$MACH
@@ -68,6 +73,7 @@ detectOS()
 checkPrereq()
 {
 	OS="$1"
+	MACH=$(echo "$OS" | cut -d- -f 3)
 
 	[[ $CHECK_PREREQ == 0 ]] && return 0
 
@@ -77,7 +83,7 @@ checkPrereq()
 			   libXt-devel ncurses-devel readline-devel \
 			   libuuid-devel zlib-devel bzip2-devel perl make; \
 		do
-			rpm --quiet -q "$rpm" || { MISSING_RPMS="$MISSING_RPMS $rpm"; }
+			rpm --quiet -q "$rpm.$MACH" || { MISSING_RPMS="$MISSING_RPMS $rpm"; }
 		done
 		if [[ ! -z $MISSING_RPMS ]]; then
 			echo "Missing prerequisites: $MISSING_RPMS"
@@ -91,7 +97,7 @@ checkPrereq()
 			   readline-devel zlib-devel gcc44-c++ gcc44-gfortran \
 			   e2fsprogs-devel bzip2-devel libXt-devel libstdc++44-devel; \
 		do
-			rpm --quiet -q "$rpm" || { MISSING_RPMS="$MISSING_RPMS $rpm"; }
+			rpm --quiet -q "$rpm.$MACH" || { MISSING_RPMS="$MISSING_RPMS $rpm"; }
 		done
 		if [[ ! -z $MISSING_RPMS ]]; then
 			echo "Missing prerequisites: $MISSING_RPMS"

@@ -31,7 +31,7 @@ usage()
 		CHECK_PREREQ	If set to 0, won't check for prerequisites.
 		DISTRIB_URL	If set, override the default remote location from
 		                which the binaries will be downloaded
-		LSST_HOME	EXPERIMENTAL: Install the stack to $LSST_HOME, rather
+		LSST_HOME	EXPERIMENTAL: Install the stack to \$LSST_HOME, rather
 		                than the directory it was originally built in. This
 		                is an experimental feature and may cause some
 		                application to misbehave.

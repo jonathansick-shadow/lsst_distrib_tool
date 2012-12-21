@@ -1,0 +1,5 @@
+rebuild_all.sh osx-* rhel-*
+rsync_distro osx-* rhel-*
+
+Before rsyncing, ensure everything built well by inspecting the build.log
+files.

@@ -16,10 +16,27 @@ export SCONSFLAGS="-j $NCORES"
 
 
 
-
 (
 	cd ../$OS
 	bash "$NEWINSTALL"
+
+	# Note: this should really go in newinstall.sh, or the lsst package
+	(
+	cat <<-"EOF"
+		# Multi-core settings
+		export NCORES=$(((test -r /proc/cpuinfo && grep processor /proc/cpuinfo | wc -l) || echo 2) 2>/dev/null)
+		export MAKEFLAGS="-j $NCORES"
+		export SCONSFLAGS="-j $NCORES"
+	EOF
+	) | tee -a loadLSST.sh | tee -a loadLSST.zsh > /dev/null
+	(
+	cat <<-"EOF"
+		# Multi-core settings
+		setenv NCORES `(test -r /proc/cpuinfo && grep processor /proc/cpuinfo | wc -l) || echo 2`
+		setenv MAKEFLAGS "-j $NCORES"
+		setenv SCONSFLAGS "-j $NCORES"
+	EOF
+	) | tee -a loadLSST.csh > /dev/null
 
 	source loadLSST.sh
 

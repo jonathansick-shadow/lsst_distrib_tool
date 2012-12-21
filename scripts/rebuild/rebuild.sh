@@ -1,9 +1,9 @@
 #!/bin/bash
 
-[[ $# == 2 ]] || { echo "Usage: $0 <os> <host>"; exit -1; }
+[[ $# == 1 ]] || { echo "Usage: $0 <os>"; exit -1; }
 
 OS="$1"
-HOST="$2"
+HOST=$(head -n1 "$OS/host")
 
 echo "Building platform $OS on $HOST..."
 rsync -az $OS/ $HOST:/opt/lsst/$OS.buildscripts || { echo "Failed to rsync build script to $HOST"; exit -1; }

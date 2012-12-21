@@ -3,7 +3,7 @@
 NEWINSTALL="$(pwd)/newinstall.sh"
 test -f "$NEWINSTALL" || { echo "No newinstall.sh script!"; exit -1; }
 
-OS=osx-10.8-x86_64
+OS=osx-10.7-x86_64
 rm -rf "../$OS"
 mkdir "../$OS" || exit -1
 

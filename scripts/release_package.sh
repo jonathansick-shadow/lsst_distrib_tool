@@ -5,6 +5,8 @@
 # 	$0 tag
 #
 
+[[ $# == 1 ]] || { echo "Usage: $0 <tag>"; exit -1; }
+
 GIT=git@git.lsstcorp.org:contrib/lsst_distrib_tool.git
 
 set -e
@@ -27,3 +29,4 @@ EOF
 sw "cd $DIR && (git archive --format=tar --prefix=lsst_distrib_tool-$T/ --remote=$GIT $T | gzip > lsst_distrib_tool-$T.tar.gz)"
 sw "cd $DIR && (tar xzf lsst_distrib_tool-$T.tar.gz lsst_distrib_tool-$T/ups/lsst_distrib_tool.table --strip-components=2)"
 sw "cd $DIR && (cp $DIR/b1.manifest ../../manifests/lsst_distrib_tool-$T+1.manifest)"
+sw "setup devenv_servertools && synctostd"

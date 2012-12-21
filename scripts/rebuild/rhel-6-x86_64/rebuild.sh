@@ -13,6 +13,10 @@ export NCORES=$((sysctl -n hw.ncpu || (test -r /proc/cpuinfo && grep processor /
 export MAKEFLAGS="-j $NCORES"
 export SCONSFLAGS="-j $NCORES"
 
+
+
+
+
 (
 	cd ../$OS
 	bash "$NEWINSTALL"
@@ -23,4 +27,6 @@ export SCONSFLAGS="-j $NCORES"
 	eups distrib install --nolocks lsst_distrib_tool "$2"
 
 	python -m compileall -x ".*/\.tests/.*" . | grep -v "Listing"
+
+	echo "$OS" > .os
 )

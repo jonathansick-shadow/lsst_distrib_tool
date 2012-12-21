@@ -123,8 +123,19 @@ containsElement()
 ###########
 
 CMD=$(basename "$0")
+
 [[ $1 == "--help" || $1 == "-h" ]] && usage
 containsElement "$1" install update || usage
+
+# rerun the script from $TMPDIR. This is to avoid the annoying feature of bash
+# where it doesn't load the entire script into memory at once, but executes
+# commands as it reads through the file. If the file changes in the
+# meantime (e.g., lsst-distrib self-updates), bash gets confused.
+if [[ -z "$BINCOPY" ]]; then
+	export BINCOPY="$(mktemp -d -t XXXXXXX)/$CMD"
+	cp -a "$0" "$BINCOPY"
+	exec "$BINCOPY" "$@"
+fi
 
 [[ -z "$LSST_HOME" ]] && unset LSST_HOME
 OS=$(detectOS)

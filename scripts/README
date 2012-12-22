@@ -15,6 +15,7 @@ to add the release to the distribution server
 	  cd rebuild &&
 	  source ../config.sh &&
 	  ./exec_cmd.sh "eups distrib install --nolocks lsst_distrib_tool $DISTRIB_TOOL_VER" $DISTROS
+	  ./exec_cmd.sh "eups declare -c lsst_distrib_tool $DISTRIB_TOOL_VER" $DISTROS
 	)
 
 4) run

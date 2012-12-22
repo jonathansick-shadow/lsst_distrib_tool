@@ -2,10 +2,13 @@
 
 [[ $# == 1 ]] || { echo "Usage: $0 <os>"; exit -1; }
 
-. config.sh
+. ../config.sh
+
 
 OS="$1"
 HOST=$(head -n1 "$OS/host")
+
+[[ -d "$OS" ]] || { echo "No config subdirectory named $OS"; exit -1; }
 
 echo "Building platform $OS on $HOST..."
 rsync -az $OS/ $HOST:/opt/lsst/$OS.buildscripts || { echo "Failed to rsync build script to $HOST"; exit -1; }

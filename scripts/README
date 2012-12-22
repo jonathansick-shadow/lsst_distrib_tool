@@ -1,0 +1,24 @@
+To release a new version of lsst_distrib_tool, do:
+
+1) edit config.sh and change DISTRIB_TOOL_TAG to the tag you want to
+release/distribute.
+
+2) run:
+
+	./release_distrib_tool_package.sh
+
+to add the release to the distribution server
+
+3) to add the package to existing binary distributions, run:
+
+	(
+	  cd rebuild &&
+	  source ../config.sh &&
+	  ./exec_cmd.sh "eups distrib install --nolocks lsst_distrib_tool $DISTRIB_TOOL_VER" $DISTROS
+	)
+
+4) run
+
+	./release_distrib_tool_webscript.sh
+
+to copy lsst-distrib script to http://lsst-web.ncsa.illinois.edu/~lsstsw/lsst-distrib

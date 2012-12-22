@@ -1,5 +1,22 @@
-rebuild_all.sh osx-* rhel-*
-rsync_distro osx-* rhel-*
+To rebuild the binary distributions from scratch, and move them to the rsync
+server, do:
+
+	export DISTROS="$(source ../config.sh; echo $DISTROS)"
+	./rebuild_all.sh   $DISTROS
+	./rsync_distros.sh $DISTROS
 
 Before rsyncing, ensure everything built well by inspecting the build.log
-files.
+output files.
+
+WARNING: This will *replace* any existing distributions. If all you want is
+to add a new package, use something like this:
+
+	./exec_cmd.sh "eups distrib install --nolocks $PACKAGE $VERSION" $DISTROS
+
+To run the demo package on the machines, do:
+
+	./exec_cmd.sh 'cd $(mktemp -d -t XXXXXXX) && 
+		curl http://dev.lsstcorp.org/cgit/contrib/demos/lsst_dm_stack_demo.git/snapshot/lsst_dm_stack_demo-master.tar.gz
+		| tar xzf - && cd lsst_dm_stack_demo-master && setup obs_sdss &&
+		./bin/demo.sh' \
+		$DISTROS

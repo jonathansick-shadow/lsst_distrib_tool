@@ -8,7 +8,7 @@ lsst-distrib detects the OS, checks for prerequisites, and if the user is
 running a known OS, and has all prerequisites installed, rsyncs a pre-built
 binary distribution to the user's machine.
 
-By default, it installs into /opt/lsst (where the binaries have been built).
+By default, it installs into /opt/lsst/$OS (where the binaries have been built).
 There's an experimental feature to install to an arbitrary directory, but it
 hasn't been exhaustively verified to work (e.g., it's not known if all of
 the code used by the stack is relocatable).
@@ -21,7 +21,7 @@ The intended workflow for a new installation is:
 Installing to a non-standard directory:
 
 	curl -O https://moya.lsst.majuric.org/lsst-distrib
-	bash lsst-distrib install /non/standard/directory
+	LSST_HOME=/non/standard/directory bash lsst-distrib install
 
 Updating an existing installation:
 
@@ -33,3 +33,10 @@ For a list of supported platforms, see:
 	https://moya.lsst.majuric.org/dmstack/binaries/
 
 .
+
+Building the Binary Stack Distributions
+---------------------------------------
+
+See documentation in scripts/README.
+
+This is only of interest to LSST package managers.

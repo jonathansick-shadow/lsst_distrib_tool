@@ -23,3 +23,13 @@ to add the release to the distribution server
 	./release_distrib_tool_webscript.sh
 
 to copy lsst-distrib script to http://lsst-web.ncsa.illinois.edu/~lsstsw/lsst-distrib
+
+5) rsync the distros to rsync server
+
+	(
+	  cd rebuild &&
+	  source ../config.sh &&
+	  ./rsync_distros.sh $DISTROS
+	)
+
+To rebuild the distributions from scratch, look at rebuild/README.

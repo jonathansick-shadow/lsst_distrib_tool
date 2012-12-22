@@ -109,8 +109,8 @@ checkPrereq()
 
 getAvailableStacks()
 {
-	echo $(rsync $1 -n  | grep "^d" | grep -v ".* \.$" | awk '{print $5}')
-	##echo "osx-10.7-x86_64 osx-10.8-x86_64 rhel-6-x86_64"
+	rsync $1 | grep "^d" | grep -v ".* \.$" | awk '{print $5}'
+	[[ ${PIPESTATUS[0]} == 0 ]] || { echo $'\n'"Error connecting to rsync server. Your firewall may be blocking the connection, or the server may be down." 1>&2; exit -1; }
 }
 
 containsElement()
@@ -147,6 +147,7 @@ if [[ -f "$ROOT/.os" ]]; then
 else
 	# Allow the user to change the auto-detected OS
 	STACKS=( $(getAvailableStacks "$URLBASE") )
+	[[ $? == 0 ]] || exit
 	containsElement "$OS" "${STACKS[@]}" && SUPP="supported" || SUPP="UNSUPPORTED"
 	while true; do
 		echo    "Install version for which platform (destination: $ROOT)?"

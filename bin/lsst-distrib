@@ -134,6 +134,7 @@ containsElement "$1" install update || usage
 if [[ -z "$BINCOPY" ]]; then
 	export BINCOPY="$(mktemp -d -t XXXXXXX)/$CMD"
 	cp -a "$0" "$BINCOPY"
+	chmod +x "$BINCOPY"
 	exec "$BINCOPY" "$@"
 fi
 

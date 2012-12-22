@@ -77,7 +77,7 @@ checkPrereq()
 
 	case $OS in
 	rhel-6-*)
-		for rpm in rsync gcc-c++ gcc-gfortran flex bison tk-devel \
+		for rpm in rsync patch gcc-c++ gcc-gfortran flex bison tk-devel \
 			   libXt-devel ncurses-devel readline-devel \
 			   libuuid-devel zlib-devel bzip2-devel perl make; \
 		do
@@ -91,7 +91,7 @@ checkPrereq()
 		fi
 		;;
 	rhel-5-*)
-		for rpm in which perl make gcc-c++ flex bison libX11-devel tk-devel \
+		for rpm in rsync patch which perl make gcc-c++ flex bison libX11-devel tk-devel \
 			   readline-devel zlib-devel gcc44-c++ gcc44-gfortran \
 			   e2fsprogs-devel bzip2-devel libXt-devel libstdc++44-devel; \
 		do

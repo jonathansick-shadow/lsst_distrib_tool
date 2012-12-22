@@ -33,3 +33,5 @@ to copy lsst-distrib script to http://lsst-web.ncsa.illinois.edu/~lsstsw/lsst-di
 	)
 
 To rebuild the distributions from scratch, look at rebuild/README.
+
+NOTE: release_distrib_tool.sh does all of this in one go.

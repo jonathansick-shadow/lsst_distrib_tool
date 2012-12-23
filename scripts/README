@@ -1,3 +1,97 @@
+Scripts for managing binary distributions
+=========================================
+
+Introduction
+------------
+
+Binary distributions are built on a number of "build hosts". The
+configuration for how to build these (and where) is stored in rebuild/$OS
+subdirectories, where $OS is a platform string (e.g., rhel-5-x86_64).  The
+binaries are copied (actually, rsync-ed) to moya.dev.lsstcorp.org for
+distribution via rsync.
+
+The overall configuration is stored in config.sh. Almost all other scripts
+source this file for information. The most likely reasons to edit it are to
+bump the $DISTRIB_TOOL_TAG number (the tag of lsst_distrib_tool that is to be
+installed/distributed with the binary distros, see below), to add new
+distributions ($DISTROS variable), and (less frequently) to change the
+RELEASE_TAG to point to the EUPS tag of the release to compile to binary.
+
+
+Build hosts
+-----------
+
+Currently, the rebuilds must be run from mjuric's laptop, since
+osx-10.7-x86_64 rebuilds happen there ("localhost"). They use mjuric's
+credentials to log in as mjuric to all build hosts. Once we find a different
+10.7 build host, this will sieze to be necessary.
+
+The build hosts are specified in $OS/host file. The last time this file was
+updated, they were:
+
+osx-10.7-x86_64:	localhost (mjuric's MacBook Air)
+osx-10.8-x86_64:	opsimblitz1.tuc.noao.edu
+rhel-6-x86_64:		moya.dev.lsstcorp.org
+rhel-5-x86_64:		build-rhel5 (VM on moya)
+
+The build scripts (see rebuild/README) use ssh to log onto each build host,
+and perform the build in /opt/lsst/$OS. Note that you have to have write
+permission to /opt/lsst for this to work.
+
+build-rhel5 is a VM on moya (internal IP: 192.168.122.69). To SSH to it, one
+needs to use moya as SSH proxy.  Add the following to your ~/.ssh/config
+file to make it happen:
+
+====
+Host build-rhel5
+        ProxyCommand ssh moya.dev.lsstcorp.org 'exec 3<>/dev/tcp/192.168.122.69/22; cat <&3 & cat >&3; kill $!'
+====
+
+The incantation lets you do 'ssh build-rhel5' from your machine -- SSH will
+proxy the connection through moya.
+
+
+Rebuilding distributions from scratch
+-------------------------------------
+
+Look at rebuild/README for instructions. The distros should *not* be rebuilt
+from scratch, unless something catastrophic happened.
+
+
+Executing a command on all build hosts
+--------------------------------------
+
+Use exec_cmd.sh script, available in the rebuild/ subdirectory. For example:
+
+	source ../config.sh
+	./exec_cmd.sh "eups list lsst_distrib_tool" $DISTROS
+
+will list the versions of lsst_distrib_tool available on each host.
+
+
+Adding a released package to binary distributions
+-------------------------------------------------
+
+This is useful if (for example) there's a bugfix release of a package that
+needs to be added to binary distros. Do:
+
+(
+  export PACKAGE=.... &&
+  export VERSION=.... &&
+  export EUPS_TAG=.... &&
+  cd rebuild &&
+  source ../config.sh &&
+  ./exec_cmd.sh "eups distrib install --nolocks $PACKAGE $VERSION"    $DISTROS
+  ./exec_cmd.sh "eups declare --tag=$EUPS_TAG lsst_distrib_tool $PACKAGE $VERSION" $DISTROS
+)
+
+
+Releasing a new version of lsst_distrib_tool
+--------------------------------------------
+
+NOTE: release_distrib_tool.sh does everything described below, except step
+      1, in one go.
+
 To release a new version of lsst_distrib_tool, do:
 
 1) edit config.sh and change DISTRIB_TOOL_TAG to the tag you want to
@@ -32,6 +126,3 @@ to copy lsst-distrib script to http://lsst-web.ncsa.illinois.edu/~lsstsw/lsst-di
 	  ./rsync_distros.sh $DISTROS
 	)
 
-To rebuild the distributions from scratch, look at rebuild/README.
-
-NOTE: release_distrib_tool.sh does all of this in one go.

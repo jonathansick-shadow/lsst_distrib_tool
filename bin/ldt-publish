@@ -14,7 +14,7 @@ set -e
 [[ -r "$LSST_HOME/.os" ]] || { echo "$LSST_HOME/.os file must exist."; exit -1; }
 
 # Source config, get $OS
-. "$LSST_DISTRIB_TOOL_DIR/scripts/config.sh"
+. "$LSST_DISTRIB_TOOL_DIR/etc/config.sh"
 OS=$(head -n1 "$LSST_HOME/.os")
 
 # confirm

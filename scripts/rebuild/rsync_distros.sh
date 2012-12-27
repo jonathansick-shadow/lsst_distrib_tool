@@ -8,5 +8,5 @@ for OS in "$@"; do
 	HOST=$(head -n1 "$OS/host")
 
 	echo "rsyncing from $HOST:/opt/lsst/$OS to $DISTURL/$OS... "
-	ssh -CA $HOST "rsync -azH -c --delete --stats '/opt/lsst/$OS' $DISTURL" | awk '{ print "   ===> ", $0; }'
+	ssh -CA $HOST "rsync -azH -c --delete --stats '/opt/lsst/$OS' $RSYNC_OPTS $DISTURL" 2>&1 | awk '{ print "   ===> ", $0; }'
 done

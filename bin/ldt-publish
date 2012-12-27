@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# ldt-publish ("lsst-distrib-tool publish")
+#
+# Rsync the currently set-up stack to the binary distribution server.
+# This script should only be ran on build machines, in the process of
+# publishing newly installed  binary packages.
+#
+
+set -e
+
+[[ -z $LSST_DISTRIB_TOOL_DIR ]] && { echo "lsst_distrib_tool package must be setup-ed before running this script."; exit -1; }
+[[ -z $LSST_HOME ]] && { echo "LSST_HOME environment variable must be set. Have you run loadLSST.sh?"; exit -1; }
+[[ -r "$LSST_HOME/.os" ]] || { echo "$LSST_HOME/.os file must exist."; exit -1; }
+
+# Source config, get $OS
+. "$LSST_DISTRIB_TOOL_DIR/scripts/config.sh"
+OS=$(head -n1 "$LSST_HOME/.os")
+
+# confirm
+while true; do
+	echo    "About to rsync /opt/lsst/$OS to $DISTURL/$OS." 
+	read -p "Continue (y/n)? " yn
+	case $yn in
+		[Yy]* ) break;;
+		[Nn]* ) echo "Quitting."; exit -1;;
+		* ) echo "Please answer yes or no.";;
+	esac
+done
+
+# rsync
+exec rsync -azHS -c --delete --stats "/opt/lsst/$OS" "$DISTURL" "$@"

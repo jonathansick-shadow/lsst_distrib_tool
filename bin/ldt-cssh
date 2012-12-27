@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Start a ClusterSSH (cssh) connection to all build hosts
+#
+
+set -e
+
+[[ -z $LSST_DISTRIB_TOOL_DIR ]] && { echo "lsst_distrib_tool package must be setup-ed before running this script."; exit -1; }
+hash cssh 2>/dev/null || { echo "Cannot find 'cssh' executable from ClusterSSH package. Have you installed it? Is it on your path?"; exit -1; }
+
+. "$LSST_DISTRIB_TOOL_DIR/etc/config.sh"
+
+DISTROS=($DISTROS)
+DDIRS=("${DISTROS[@]/#/$LSST_DISTRIB_TOOL_DIR/scripts/rebuild/}")
+HOSTS=$(cat "${DDIRS[@]/%//host}")
+
+exec cssh -o \'$@\' $HOSTS

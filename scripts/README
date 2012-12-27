@@ -55,11 +55,11 @@ Rebuilding distributions from scratch
 -------------------------------------
 
 Look at rebuild/README for instructions. The distros should *not* be rebuilt
-from scratch, unless something catastrophic happened.
+from scratch, unless some catastrophy occured.
 
 
-Executing a command on all build hosts
---------------------------------------
+Executing a command on all build hosts (deprecated; see below)
+--------------------------------------------------------------
 
 Use exec_cmd.sh script, available in the rebuild/ subdirectory. For example:
 
@@ -69,8 +69,8 @@ Use exec_cmd.sh script, available in the rebuild/ subdirectory. For example:
 will list the versions of lsst_distrib_tool available on each host.
 
 
-Adding a released package to binary distributions
--------------------------------------------------
+Adding a released package to binary distributions (deprecated; see below)
+-------------------------------------------------------------------------
 
 This is useful if (for example) there's a bugfix release of a package that
 needs to be added to binary distros. Do:
@@ -84,6 +84,46 @@ needs to be added to binary distros. Do:
   ./exec_cmd.sh "eups distrib install --nolocks $PACKAGE $VERSION"    $DISTROS
   ./exec_cmd.sh "eups declare --tag=$EUPS_TAG lsst_distrib_tool $PACKAGE $VERSION" $DISTROS
 )
+
+
+Working with build hosts using ClusterSSH (recommended)
+-------------------------------------------------------
+
+ClusterSSH (or cssh; sourceforge.net/projects/clusterssh/) is a tool that
+connects via ssh to multiple hosts and directs keyboard input to all of
+them. It's as if you're typing on all the connected hosts at the same time.
+This is an excellent tool if the same operation needs to be done on all
+hosts (e.g., installing a package). Packages for RHEL exist in EPEL, while
+Mac packages are available through Macports.
+
+To start a cssh session to all build hosts, setup the lsst_distrib_tool
+package and run:
+
+	ldt-cssh
+
+Any arguments you pass to ldt-cssh will be passed to the underlying ssh
+instance. This is useful to turn on SSH agent forwarding:
+
+	ldt-cssh -A
+
+Use a predefined alias 'cds' to change into the build directory (otherwise,
+since the build directories have platform-dependent names, there would be no
+way to do so).
+
+To install new packages, do as you normally would if you were working on a
+single build host (e.g., source loadLSST.sh; eups distrib install ...).
+
+To publish (==rsync) the new binary tree to the binary distribution server,
+use:
+
+	ldt-publish
+
+Any arguments to ldt-publish will be passed through to rsync. For example,
+running:
+
+	ldt-publish -n --progress
+
+is useful to check what ldt-publish would do, before actually doing it.
 
 
 Releasing a new version of lsst_distrib_tool

@@ -2,7 +2,7 @@
 
 [[ $# == 1 ]] || { echo "Usage: $0 <os>"; exit -1; }
 
-. ../config.sh
+. ../../etc/config.sh
 
 
 OS="$1"

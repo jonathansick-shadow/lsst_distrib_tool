@@ -6,7 +6,7 @@
 
 [[ $# -ge 2 ]] || { echo "Usage: $0 <cmd> <os> [os] [...]"; exit -1; }
 
-. ../config.sh
+. ../../etc/config.sh
 
 CMD="$1"
 shift;

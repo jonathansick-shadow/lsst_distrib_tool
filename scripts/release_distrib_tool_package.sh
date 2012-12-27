@@ -6,7 +6,7 @@
 
 set -e
 
-. config.sh
+. ../etc/config.sh
 
 echo "Releasing $DISTRIB_TOOL_TAG as $DISTRIB_TOOL_VER"
 

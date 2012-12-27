@@ -6,7 +6,7 @@
 
 set -e
 
-. config.sh
+. ../etc/config.sh
 
 echo "Copying lsst-distrib from tag $DISTRIB_TOOL_TAG to ~lsstsw/lsst-distrib"
 

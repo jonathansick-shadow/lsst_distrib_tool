@@ -63,7 +63,7 @@ Executing a command on all build hosts
 
 Use exec_cmd.sh script, available in the rebuild/ subdirectory. For example:
 
-	source ../config.sh
+	source ../../etc/config.sh
 	./exec_cmd.sh "eups list lsst_distrib_tool" $DISTROS
 
 will list the versions of lsst_distrib_tool available on each host.
@@ -80,7 +80,7 @@ needs to be added to binary distros. Do:
   export VERSION=.... &&
   export EUPS_TAG=.... &&
   cd rebuild &&
-  source ../config.sh &&
+  source ../../etc/config.sh &&
   ./exec_cmd.sh "eups distrib install --nolocks $PACKAGE $VERSION"    $DISTROS
   ./exec_cmd.sh "eups declare --tag=$EUPS_TAG lsst_distrib_tool $PACKAGE $VERSION" $DISTROS
 )
@@ -94,7 +94,7 @@ NOTE: release_distrib_tool.sh does everything described below, except step
 
 To release a new version of lsst_distrib_tool, do:
 
-1) edit config.sh and change DISTRIB_TOOL_TAG to the tag you want to
+1) edit etc/config.sh and change DISTRIB_TOOL_TAG to the tag you want to
 release/distribute.
 
 2) run:
@@ -107,7 +107,7 @@ to add the release to the distribution server
 
 	(
 	  cd rebuild &&
-	  source ../config.sh &&
+	  source ../../etc/config.sh &&
 	  ./exec_cmd.sh "eups distrib install --nolocks lsst_distrib_tool $DISTRIB_TOOL_VER" $DISTROS
 	  ./exec_cmd.sh "eups declare -c lsst_distrib_tool $DISTRIB_TOOL_VER" $DISTROS
 	)
@@ -122,7 +122,7 @@ to copy lsst-distrib script to http://lsst-web.ncsa.illinois.edu/~lsstsw/lsst-di
 
 	(
 	  cd rebuild &&
-	  source ../config.sh &&
+	  source ../../etc/config.sh &&
 	  ./rsync_distros.sh $DISTROS
 	)
 

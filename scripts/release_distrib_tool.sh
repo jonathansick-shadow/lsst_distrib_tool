@@ -10,7 +10,7 @@ set -e
 
 (
   cd rebuild &&
-  source ../config.sh &&
+  source ../../etc/config.sh &&
   ./exec_cmd.sh "eups distrib install --nolocks lsst_distrib_tool $DISTRIB_TOOL_VER" $DISTROS
   ./exec_cmd.sh "eups declare -c lsst_distrib_tool $DISTRIB_TOOL_VER" $DISTROS
 )
@@ -19,6 +19,6 @@ set -e
 
 (
   cd rebuild &&
-  source ../config.sh &&
+  source ../../etc/config.sh &&
   ./rsync_distros.sh $DISTROS
 )

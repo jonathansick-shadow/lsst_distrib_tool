@@ -2,7 +2,7 @@
 
 [[ $# -ge 1 ]] || { echo "Usage: $0 <os> [os] [...]"; exit -1; }
 
-. ../config.sh
+. ../../etc/config.sh
 
 for OS in "$@"; do
 	HOST=$(head -n1 "$OS/host")

@@ -54,6 +54,11 @@ detectOS()
 		if [ -f /etc/redhat-release ]; then
 			OS="rhel"
 			VER=$(cat /etc/redhat-release | sed -r 's/^.[^0-9.]*([0-9]*).*$/\1/')
+		elif [ -f /etc/lsb-release ]; then
+			# May not work with anything other than Ubuntu
+			. /etc/lsb-release
+			OS=${DISTRIB_ID,,}		# convert to lowercase (Ubuntu -> ubuntu)
+			VER=${DISTRIB_RELEASE//./}	# remove any dots (12.04 -> 1204)
 		else
 			echo "Unknown Linux flavor; please install from source." 1>&2
 			exit -1

@@ -109,6 +109,29 @@ checkPrereq()
 			exit -1
 		fi
 		;;
+	ubuntu-1204-*)
+		for deb in rsync curl patch debianutils libx11-dev \
+			   libreadline6-dev zlib1g-dev dpkg-dev libbz2-dev \
+			   gfortran libxaw7-dev libfreetype6-dev \
+			   texlive-latex-base tcl-dev g++ gfortran git-core \
+			   autoconf automake libtool m4 make flex bison \
+			   patch libuuid1 uuid-dev latex2html libxaw7-dev \
+			   zlib1g-dev libbz2-dev doxygen graphviz \
+			   libgsl0-dev python-dev python-setuptools \
+			   python-numpy python-matplotlib
+		do
+			# Note: this is not careful about whether the package for the correct
+			# architecture is installed. I'll leave it up to someone with more dpkg-foo.
+
+			dpkg -s "$deb" >/dev/null 2>&1 || { MISSING_DEBS="$MISSING_DEBS $deb"; }
+		done
+		if [[ ! -z $MISSING_DEBS ]]; then
+			echo "Missing prerequisites: $MISSING_DEBS" 1>&2
+			echo "As root, run:" 1>&2
+			echo "    apt-get install $MISSING_DEBS" 1>&2
+			exit -1
+		fi
+		;;
 	esac
 }
 
@@ -211,11 +234,11 @@ update)
 esac
 
 ROOT=$(cd "$ROOT" && pwd)
-echo "Installing to $ROOT"
 
 checkPrereq "$OS"
 
 URL="$URLBASE/$OS/"
+echo "Installing to $ROOT"
 echo "Downloading using rsync from $URL"
 n=0
 while read line; do

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+CMD=$(basename "$0")
+
+usage()
+{
+	cat 1>&2 <<-EOF;
+		EUPS-tag all packages tagged as TAGCUR with tag TAGNEW. The original
+		tag will not be removed.
+	
+		Usage:
+		
+		        $CMD [-h|--help] <TAG1> <TAG2>
+		        
+		Examples:
+		
+		        $CMD v6_2 current
+
+		Arguments:
+
+		TAGCUR		Packages with this tag will be tagged with TAGNEW
+		TAGNEW		The new tag to assign to packages with TAGCUR tag
+
+EOF
+	exit -2;
+}
+
+[[ $1 == "--help" || $1 == "-h" ]] && usage
+[[ $# == 2 ]] || usage
+
+TAGCUR="$1"
+TAGNEW="$2"
+
+eups list -t "$TAGCUR" |
+	awk '{print $1,$2}' |
+	xargs -L 1 eups declare -t "$TAGNEW"

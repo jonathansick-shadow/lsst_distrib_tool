@@ -126,6 +126,18 @@ running:
 is useful to check what ldt-publish would do, before actually doing it.
 
 
+Re-tagging a release as 'current'
+---------------------------------
+
+Typically, once a new release is produced and tested, it should be made
+the default (or tagged as "current", in EUPS speak). Use the ldt-eups-retag
+utility to do so. For example:
+
+	ldt-eups-retag v6_2 current
+
+will add a tag 'current' to any package that already has a tag 'v6_2'.
+
+
 Releasing a new version of lsst_distrib_tool
 --------------------------------------------
 

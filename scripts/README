@@ -147,7 +147,8 @@ NOTE: release_distrib_tool.sh does everything described below, except step
 To release a new version of lsst_distrib_tool, do:
 
 1) edit etc/config.sh and change DISTRIB_TOOL_TAG to the tag you want to
-release/distribute.
+release/distribute.  The (annotated) tag must already exist in the git
+repository.
 
 2) run:
 

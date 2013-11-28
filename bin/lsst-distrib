@@ -84,6 +84,7 @@ checkPrereq()
 	rhel-6-*)
 		for rpm in rsync patch gcc-c++ gcc-gfortran flex bison tk-devel \
 			   libXt-devel ncurses-devel readline-devel \
+			   openssl-devel atlas \
 			   libuuid-devel zlib-devel bzip2-devel perl make; \
 		do
 			rpm --quiet -q "$rpm.$MACH" || { MISSING_RPMS="$MISSING_RPMS $rpm"; }
@@ -97,7 +98,7 @@ checkPrereq()
 		;;
 	rhel-5-*)
 		for rpm in rsync patch which perl make gcc-c++ flex bison libX11-devel tk-devel \
-			   readline-devel zlib-devel gcc44-c++ gcc44-gfortran \
+			   readline-devel zlib-devel gcc44-c++ gcc44-gfortran openssl-devel \
 			   e2fsprogs-devel bzip2-devel libXt-devel libstdc++44-devel; \
 		do
 			rpm --quiet -q "$rpm.$MACH" || { MISSING_RPMS="$MISSING_RPMS $rpm"; }
@@ -118,7 +119,7 @@ checkPrereq()
 			   patch libuuid1 uuid-dev latex2html libxaw7-dev \
 			   zlib1g-dev libbz2-dev doxygen graphviz \
 			   libgsl0-dev python-dev python-setuptools \
-			   python-numpy python-matplotlib
+			   python-numpy python-matplotlib libssl-dev
 		do
 			# Note: this is not careful about whether the package for the correct
 			# architecture is installed. I'll leave it up to someone with more dpkg-foo.
